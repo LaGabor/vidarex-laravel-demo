@@ -27,7 +27,7 @@ import fetchUrl from "@/components/Fetch";
 export default {
   name: 'HomeView',
   components: {
-
+    fetchUrl
   },
   data() {
     return {

@@ -16,7 +16,7 @@ class AuthController extends Controller
     public function register( Request $request){
 
         if(! $this->validateRegister($request)){
-            return response(['message' => ["Wrong credentials!"]], Response::HTTP_FAILED_DEPENDENCY);
+            return response(['warning' => ["Wrong credentials!"]], Response::HTTP_OK);
         };
         $role = $this->validateRole($request->role);
         $encryptedPassword = bcrypt($request->password);
@@ -28,20 +28,21 @@ class AuthController extends Controller
         return response()->json([
             'token' =>$token,
             'Type' => 'Bearer',
-            'role' => $user->role
+            'role' => $user->role,
+            'name' => $user->name
         ]);
     }
 
     public function login(Request $request)
     {
         if(! $this->isNameAndPasswordValid($request->name,$request->password)){
-            return response(['message' => ["Wrong inputs!"]], Response::HTTP_FAILED_DEPENDENCY);
+            return response(['warning' => ["Wrong credentials!"]], Response::HTTP_OK);
         }
 
         $user = User::where('name', $request->name)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response(['message' => ["Wrong credentials!"]], Response::HTTP_FAILED_DEPENDENCY);
+            return response(['warning' => ["Wrong credentials!"]], Response::HTTP_OK);
         }
 
         $token = $user->createToken('my-token')->plainTextToken;
@@ -49,11 +50,12 @@ class AuthController extends Controller
         return response()->json([
             'token' => $token,
             'Type' => 'Bearer',
-            'role' => $user->role
+            'role' => $user->role,
+            'name' => $user->name
         ]);
     }
     public function notAuthenticated():Response{
-        return response(['message' => ["Not Authenticated!"]], Response::HTTP_NETWORK_AUTHENTICATION_REQUIRED);
+        return response(['warning' => ["Not Authenticated!"]], Response::HTTP_NETWORK_AUTHENTICATION_REQUIRED);
     }
 
     private function isEmailExist(string $email):bool{

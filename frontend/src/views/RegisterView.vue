@@ -2,6 +2,7 @@
   <div class="container mt-5">
     <div class="card">
       <div class="card-body">
+        <Alert :text="alertText" @dismissAlert="dismissAlert"/>
         <h4 class="card-title">Register</h4>
         <form @submit.prevent="register">
           <div class="mb-3">
@@ -28,22 +29,43 @@
 </template>
 
 <script>
+import fetchUrl from "@/components/Fetch";
+import Alert from "@/components/Alert";
 export default {
+  name: 'RegisterView',
+  components: {
+    fetchUrl,
+    Alert,
+  },
   data() {
     return {
       username: '',
       password: '',
       passwordCheck: '',
       email:'',
+      alertText:null,
     };
   },
   methods: {
-    register() {
-      console.log('Username:', this.username);
-      console.log('Password:', this.password);
-      console.log('Password Check:', this.passwordCheck);
-      console.log('Email :', this.email);
+    async register() {
+      if(this.passwordCheck !== this.password){
+        this.setAlert("Passwords not matching!");
+        return;
+      }
+      this.dismissAlert();
+      let response = await fetchUrl.post("http://localhost:8001/api/register", {name: this.username, password: this.password, email: this.email});
+      if(response.warning){
+        this.setAlert("Unsuccessfull Registration!");
+      }else{
+        this.$router.push({ name: 'home' });
+      }
     },
+    dismissAlert() {
+      this.alertText = null;
+    },
+    setAlert(text) {
+      this.alertText = text;
+    }
   },
 };
 </script>

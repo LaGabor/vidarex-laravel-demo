@@ -5,6 +5,7 @@
         <h4 class="card-title">Login</h4>
         <form @submit.prevent="login">
           <div class="mb-3">
+            <Alert :text="alertText" @dismissAlert="dismissAlert"/>
             <label for="username" class="form-label">Name</label>
             <input v-model="username" type="text" class="form-control" id="username" required>
           </div>
@@ -20,18 +21,37 @@
 </template>
 
 <script>
+import fetchUrl from "@/components/Fetch";
+import Alert from "@/components/Alert";
 export default {
+  name: 'LoginView',
+  components: {
+    fetchUrl,
+    Alert
+  },
   data() {
     return {
       username: '',
       password: '',
+      alertText:null,
     };
   },
   methods: {
-    login() {
-      console.log('Username:', this.username);
-      console.log('Password:', this.password);
+    async login() {
+      this.dismissAlert();
+      let response = await fetchUrl.post("http://localhost:8001/api/login", {name: this.username, password: this.password});
+      if(response.warning){
+        this.setAlert();
+      }else {
+        this.$router.push({ name: 'home' });
+      }
+      },
+    dismissAlert() {
+      this.alertText = null;
     },
+    setAlert() {
+      this.alertText = "Unsuccessfull Login!";
+    }
   },
 };
 </script>
