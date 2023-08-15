@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DeviceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('/unauthorized', [AuthController::class, 'notAuthenticated'])->name('unauthenticated');
+Route::get('/device/all', [DeviceController::class, 'getAllDevices']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+
+
+Route::group(['middleware' => ['auth:sanctum']], function(){
+    Route::post('/device/new', [DeviceController::class, 'createNewDevice']);
+    Route::delete('/device/delete', [DeviceController::class, 'deleteDeviceById'])->middleware('restrictRole:1');
+    Route::put('/device/edit', [DeviceController::class, 'editDeviceById'])->middleware('restrictRole:1');
 });
+
+
