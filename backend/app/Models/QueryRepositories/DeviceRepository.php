@@ -33,7 +33,7 @@ class DeviceRepository
 
     public function createNewDevice(string $deviceName,string $deviceIp)
     {
-        return Device::create([
+         Device::create([
             'name' => $deviceName,
             'ip' => $deviceIp,
             'created_at' => now(),
