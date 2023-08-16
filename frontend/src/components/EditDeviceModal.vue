@@ -54,9 +54,6 @@ import Alert from "@/components/Alert";
         const ipv4Regex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
         if (( this.name.trim() !== "" && ipv4Regex.test(this.ip))) {
           this.editDevice()
-          this.$router.push('/').then(() => {
-            window.location.reload();
-          });
           this.closeModal();
         }else{
           this.setAlert();
@@ -79,6 +76,9 @@ import Alert from "@/components/Alert";
       },
       async editDevice(){
        await fetchUrl.put("device/edit", {deviceIp:this.ip, deviceName: this.name, deviceId:this.device.id});
+        this.$router.push('/').then(() => {
+          window.location.reload();
+        });
       }
 
     },

@@ -54,9 +54,6 @@ export default {
       const ipv4Regex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
       if (( this.name.trim() !== "" && ipv4Regex.test(this.ip))) {
         this.createDevice()
-        this.$router.push('/').then(() => {
-          window.location.reload();
-        });
       }else{
         this.setAlert();
       }
@@ -73,7 +70,9 @@ export default {
     },
     async createDevice(){
       await fetchUrl.post("device/new", {deviceIp:this.ip, deviceName: this.name});
-
+      this.$router.push('/').then(() => {
+        window.location.reload();
+      });
     }
 
   },
