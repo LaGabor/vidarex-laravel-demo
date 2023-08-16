@@ -7,7 +7,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="cancel"></button>
         </div>
         <div class="modal-body">
-          <form @submit.prevent="edit">
+          <form>
             <div class="form-group">
               <Alert :text="alertText" @dismissAlert="dismissAlert"/>
               <label for="ip">IP</label>
@@ -19,7 +19,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" id='cancelButton' class="btn btn-danger" data-bs-dismiss="modal" @click="cancel">Close</button>
-              <button type="submit" class="btn btn-success" @click="edit">Edit</button>
+              <button  class="btn btn-success" @click="edit">Edit</button>
             </div>
           </form>
         </div>
