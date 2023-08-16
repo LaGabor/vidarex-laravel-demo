@@ -32,7 +32,7 @@ class DeviceController extends Controller
     {
         if($this->isDeviceNameValid($request->deviceName)){
             if($this->isDeviceIpValid($request->deviceIp)){
-                $this->deviceRepository->createNewDevice(trim($request->name),$request->ip);
+                $this->deviceRepository->createNewDevice(trim($request->deviceName),$request->deviceIp);
                 return response(['message' => ["Device created  successfully!"]], Response::HTTP_OK);
             }
             return response(['message' => ["Invalid ip"]], Response::HTTP_FAILED_DEPENDENCY);

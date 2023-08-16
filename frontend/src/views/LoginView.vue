@@ -1,8 +1,8 @@
 <template>
-  <div class="container mt-5">
+  <div class="container mt-5 d-flex justify-content-center">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Login</h4>
+        <h3 class="card-title d-flex justify-content-center">Login</h3>
         <form @submit.prevent="login">
           <div class="mb-3">
             <Alert :text="alertText" @dismissAlert="dismissAlert"/>
@@ -13,7 +13,9 @@
             <label for="password" class="form-label">Password</label>
             <input v-model="password" type="password" class="form-control" id="password" required>
           </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <div class="mt-5 mb-3 d-flex justify-content-center" >
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
         </form>
       </div>
     </div>
@@ -23,6 +25,8 @@
 <script>
 import fetchUrl from "@/components/Fetch";
 import Alert from "@/components/Alert";
+
+
 export default {
   name: 'LoginView',
   components: {
@@ -39,11 +43,16 @@ export default {
   methods: {
     async login() {
       this.dismissAlert();
-      let response = await fetchUrl.post("http://localhost:8001/api/login", {name: this.username, password: this.password});
+      let response = await fetchUrl.post("login", {name: this.username, password: this.password});
       if(response.warning){
         this.setAlert();
       }else {
-        this.$router.push({ name: 'home' });
+        localStorage.setItem('token',response.token);
+        localStorage.setItem('role',response.role);
+        localStorage.setItem('name',response.name);
+        this.$router.push('/').then(() => {
+          window.location.reload();
+        });
       }
       },
     dismissAlert() {
@@ -57,5 +66,7 @@ export default {
 </script>
 
 <style>
-
+.card{
+  width: 50%;
+}
 </style>
